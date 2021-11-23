@@ -199,7 +199,8 @@ public class SSLUtilsTest extends TestLogger {
     public void testRESTClientSSLMissingPassword() throws Exception {
         Configuration config = new Configuration();
         config.setBoolean(SecurityOptions.SSL_REST_ENABLED, true);
-        config.setString(SecurityOptions.SSL_REST_TRUSTSTORE, TRUST_STORE_PATH);
+        config.setString(SecurityOptions.SSL_REST_SERVER_TRUSTSTORE, TRUST_STORE_PATH);
+        config.setString(SecurityOptions.SSL_REST_CLIENT_TRUSTSTORE, TRUST_STORE_PATH);
 
         try {
             SSLUtils.createRestClientSSLEngineFactory(config);
@@ -561,7 +562,7 @@ public class SSLUtilsTest extends TestLogger {
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         try (InputStream keyStoreFile =
                 Files.newInputStream(
-                        new File(config.getString(SecurityOptions.SSL_REST_KEYSTORE)).toPath())) {
+                        new File(config.getString(SecurityOptions.SSL_REST_SERVER_KEYSTORE)).toPath())) {
             keyStore.load(
                     keyStoreFile,
                     config.getString(SecurityOptions.SSL_REST_KEYSTORE_PASSWORD).toCharArray());
@@ -582,13 +583,15 @@ public class SSLUtilsTest extends TestLogger {
     }
 
     private static void addRestKeyStoreConfig(Configuration config) {
-        config.setString(SecurityOptions.SSL_REST_KEYSTORE, KEY_STORE_PATH);
+        config.setString(SecurityOptions.SSL_REST_SERVER_KEYSTORE, KEY_STORE_PATH);
+        config.setString(SecurityOptions.SSL_REST_CLIENT_KEYSTORE, KEY_STORE_PATH);
         config.setString(SecurityOptions.SSL_REST_KEYSTORE_PASSWORD, KEY_STORE_PASSWORD);
         config.setString(SecurityOptions.SSL_REST_KEY_PASSWORD, KEY_PASSWORD);
     }
 
     private static void addRestTrustStoreConfig(Configuration config) {
-        config.setString(SecurityOptions.SSL_REST_TRUSTSTORE, TRUST_STORE_PATH);
+        config.setString(SecurityOptions.SSL_REST_SERVER_TRUSTSTORE, TRUST_STORE_PATH);
+        config.setString(SecurityOptions.SSL_REST_CLIENT_TRUSTSTORE, TRUST_STORE_PATH);
         config.setString(SecurityOptions.SSL_REST_TRUSTSTORE_PASSWORD, TRUST_STORE_PASSWORD);
     }
 

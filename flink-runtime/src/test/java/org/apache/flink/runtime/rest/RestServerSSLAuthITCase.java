@@ -79,7 +79,9 @@ public class RestServerSSLAuthITCase extends TestLogger {
         Tuple2<Configuration, Configuration> untrusted = getClientServerConfiguration();
 
         Configuration serverConfig = new Configuration(untrusted.f1);
-        serverConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE, TRUST_STORE_FILE);
+        serverConfig.setString(SecurityOptions.SSL_REST_SERVER_TRUSTSTORE, TRUST_STORE_FILE);
+        serverConfig.setString(SecurityOptions.SSL_REST_CLIENT_TRUSTSTORE, TRUST_STORE_FILE);
+
         // expect fingerprint which client does not have
         serverConfig.setString(
                 SecurityOptions.SSL_REST_CERT_FINGERPRINT,
@@ -87,7 +89,8 @@ public class RestServerSSLAuthITCase extends TestLogger {
                         .replaceAll("[0-9A-Z]", "0"));
 
         Configuration clientConfig = new Configuration(untrusted.f0);
-        clientConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE, TRUST_STORE_FILE);
+        clientConfig.setString(SecurityOptions.SSL_REST_SERVER_TRUSTSTORE, TRUST_STORE_FILE);
+        clientConfig.setString(SecurityOptions.SSL_REST_CLIENT_TRUSTSTORE, TRUST_STORE_FILE);
 
         // client and server uses same trust store, however server configured with mismatching
         // fingerprint
@@ -158,16 +161,20 @@ public class RestServerSSLAuthITCase extends TestLogger {
         baseConfig.setString(SecurityOptions.SSL_ALGORITHMS, "TLS_RSA_WITH_AES_128_CBC_SHA");
 
         Configuration serverConfig = new Configuration(baseConfig);
-        serverConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE, TRUST_STORE_FILE);
+        serverConfig.setString(SecurityOptions.SSL_REST_SERVER_TRUSTSTORE, TRUST_STORE_FILE);
+        serverConfig.setString(SecurityOptions.SSL_REST_CLIENT_TRUSTSTORE, TRUST_STORE_FILE);
         serverConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE_PASSWORD, "password");
-        serverConfig.setString(SecurityOptions.SSL_REST_KEYSTORE, KEY_STORE_FILE);
+        serverConfig.setString(SecurityOptions.SSL_REST_SERVER_KEYSTORE, KEY_STORE_FILE);
+        serverConfig.setString(SecurityOptions.SSL_REST_CLIENT_KEYSTORE, KEY_STORE_FILE);
         serverConfig.setString(SecurityOptions.SSL_REST_KEYSTORE_PASSWORD, "password");
         serverConfig.setString(SecurityOptions.SSL_REST_KEY_PASSWORD, "password");
 
         Configuration clientConfig = new Configuration(baseConfig);
-        clientConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE, UNTRUSTED_KEY_STORE_FILE);
+        clientConfig.setString(SecurityOptions.SSL_REST_SERVER_TRUSTSTORE, UNTRUSTED_KEY_STORE_FILE);
+        clientConfig.setString(SecurityOptions.SSL_REST_CLIENT_TRUSTSTORE, UNTRUSTED_KEY_STORE_FILE);
         clientConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE_PASSWORD, "password");
-        clientConfig.setString(SecurityOptions.SSL_REST_KEYSTORE, KEY_STORE_FILE);
+        clientConfig.setString(SecurityOptions.SSL_REST_SERVER_KEYSTORE, KEY_STORE_FILE);
+        clientConfig.setString(SecurityOptions.SSL_REST_CLIENT_KEYSTORE, KEY_STORE_FILE);
         clientConfig.setString(SecurityOptions.SSL_REST_KEYSTORE_PASSWORD, "password");
         clientConfig.setString(SecurityOptions.SSL_REST_KEY_PASSWORD, "password");
         return Tuple2.of(clientConfig, serverConfig);

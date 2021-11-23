@@ -153,9 +153,11 @@ public class RestServerEndpointITCase extends TestLogger {
 
         final Configuration sslConfig = new Configuration(config);
         sslConfig.setBoolean(SecurityOptions.SSL_REST_ENABLED, true);
-        sslConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE, truststorePath);
+        sslConfig.setString(SecurityOptions.SSL_REST_SERVER_TRUSTSTORE, truststorePath);
+        sslConfig.setString(SecurityOptions.SSL_REST_CLIENT_TRUSTSTORE, truststorePath);
         sslConfig.setString(SecurityOptions.SSL_REST_TRUSTSTORE_PASSWORD, "password");
-        sslConfig.setString(SecurityOptions.SSL_REST_KEYSTORE, keystorePath);
+        sslConfig.setString(SecurityOptions.SSL_REST_SERVER_KEYSTORE, keystorePath);
+        sslConfig.setString(SecurityOptions.SSL_REST_CLIENT_KEYSTORE, keystorePath);
         sslConfig.setString(SecurityOptions.SSL_REST_KEYSTORE_PASSWORD, "password");
         sslConfig.setString(SecurityOptions.SSL_REST_KEY_PASSWORD, "password");
 

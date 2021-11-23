@@ -214,14 +214,12 @@ public class SSLUtils {
     }
 
     private static TrustManagerFactory getTrustManagerFactory(
-            Configuration config, boolean internal)
+            Configuration config, boolean internal, ConfigOption<String> trustStorePathType)
             throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         String trustStoreFilePath =
                 getAndCheckOption(
                         config,
-                        internal
-                                ? SecurityOptions.SSL_INTERNAL_TRUSTSTORE
-                                : SecurityOptions.SSL_REST_TRUSTSTORE,
+                        trustStorePathType,
                         SecurityOptions.SSL_TRUSTSTORE);
 
         String trustStorePassword =
@@ -257,15 +255,13 @@ public class SSLUtils {
     }
 
     private static KeyManagerFactory getKeyManagerFactory(
-            Configuration config, boolean internal, SslProvider provider)
+            Configuration config, boolean internal, SslProvider provider, ConfigOption<String> keyStorePathType)
             throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException,
                     UnrecoverableKeyException {
         String keystoreFilePath =
                 getAndCheckOption(
                         config,
-                        internal
-                                ? SecurityOptions.SSL_INTERNAL_KEYSTORE
-                                : SecurityOptions.SSL_REST_KEYSTORE,
+                        keyStorePathType,
                         SecurityOptions.SSL_KEYSTORE);
 
         String keystorePassword =
@@ -340,8 +336,8 @@ public class SSLUtils {
         int sessionCacheSize = config.getInteger(SecurityOptions.SSL_INTERNAL_SESSION_CACHE_SIZE);
         int sessionTimeoutMs = config.getInteger(SecurityOptions.SSL_INTERNAL_SESSION_TIMEOUT);
 
-        KeyManagerFactory kmf = getKeyManagerFactory(config, true, provider);
-        TrustManagerFactory tmf = getTrustManagerFactory(config, true);
+        KeyManagerFactory kmf = getKeyManagerFactory(config, true, provider, SecurityOptions.SSL_INTERNAL_KEYSTORE);
+        TrustManagerFactory tmf = getTrustManagerFactory(config, true, SecurityOptions.SSL_INTERNAL_TRUSTSTORE);
         ClientAuth clientAuth = ClientAuth.REQUIRE;
 
         final SslContextBuilder sslContextBuilder;
@@ -404,16 +400,16 @@ public class SSLUtils {
         if (clientMode) {
             sslContextBuilder = SslContextBuilder.forClient();
             if (clientAuth != ClientAuth.NONE) {
-                KeyManagerFactory kmf = getKeyManagerFactory(config, false, provider);
+                KeyManagerFactory kmf = getKeyManagerFactory(config, false, provider, SecurityOptions.SSL_REST_CLIENT_KEYSTORE);
                 sslContextBuilder.keyManager(kmf);
             }
         } else {
-            KeyManagerFactory kmf = getKeyManagerFactory(config, false, provider);
+            KeyManagerFactory kmf = getKeyManagerFactory(config, false, provider, SecurityOptions.SSL_REST_SERVER_KEYSTORE);
             sslContextBuilder = SslContextBuilder.forServer(kmf);
         }
 
         if (clientMode || clientAuth != ClientAuth.NONE) {
-            TrustManagerFactory tmf = getTrustManagerFactory(config, false);
+            TrustManagerFactory tmf = getTrustManagerFactory(config, false, SecurityOptions.SSL_REST_CLIENT_KEYSTORE);
             sslContextBuilder.trustManager(tmf);
         }
 

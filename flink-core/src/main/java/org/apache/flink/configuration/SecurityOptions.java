@@ -179,7 +179,7 @@ public class SecurityOptions {
 
     /** Secret to decrypt the server key. */
     @Documentation.ExcludeFromDocumentation(
-            "The SSL Setup encourages separate configs for internal and REST security.")
+            "The SSL Setup encourages separate configs for intinternal.keystoreernal and REST security.")
     public static final ConfigOption<String> SSL_KEY_PASSWORD =
             key("security.ssl.key-password")
                     .noDefaultValue()
@@ -266,15 +266,27 @@ public class SecurityOptions {
     // ----------------------- certificates (external) ------------------------
 
     /**
-     * For external (REST) SSL, the Java keystore file containing the private key and certificate.
+     * For external (REST) SSL, the Java server side keystore file containing the private key and certificate.
      */
     @Documentation.Section(Documentation.Sections.SECURITY_SSL)
-    public static final ConfigOption<String> SSL_REST_KEYSTORE =
-            key("security.ssl.rest.keystore")
+    public static final ConfigOption<String> SSL_REST_SERVER_KEYSTORE =
+            key("security.ssl.rest.server.keystore")
                     .noDefaultValue()
                     .withDescription(
-                            "The Java keystore file with SSL Key and Certificate, "
+                            "The Java server side keystore file with SSL Key and Certificate, "
                                     + "to be used Flink's external REST endpoints.");
+
+    /**
+     * For external (REST) SSL, the Java client side keystore file containing the private key and certificate.
+     */
+    @Documentation.Section(Documentation.Sections.SECURITY_SSL)
+    public static final ConfigOption<String> SSL_REST_CLIENT_KEYSTORE =
+            key("security.ssl.rest.client.keystore")
+                    .noDefaultValue()
+                    .withDescription(
+                            "The Java client side keystore file with SSL Key and Certificate, "
+                                    + "to be used Flink's external REST endpoints.");
+
 
     /**
      * For external (REST) SSL, the password to decrypt the keystore file containing the
@@ -308,6 +320,31 @@ public class SecurityOptions {
                     .withDescription(
                             "The truststore file containing the public CA certificates to verify the peer "
                                     + "for Flink's external REST endpoints.");
+
+    /**
+     * For external (REST) SSL, the server side truststore file containing the public CA certificates to verify
+     * the ssl peers.
+     */
+    @Documentation.Section(Documentation.Sections.SECURITY_SSL)
+    public static final ConfigOption<String> SSL_REST_SERVER_TRUSTSTORE =
+            key("security.ssl.rest.server.truststore")
+                    .noDefaultValue()
+                    .withDescription(
+                            "The server side truststore file containing the public CA certificates to verify the peer "
+                                    + "for Flink's external REST endpoints.");
+
+    /**
+     * For external (REST) SSL, the client side truststore file containing the public CA certificates to verify
+     * the ssl peers.
+     */
+    @Documentation.Section(Documentation.Sections.SECURITY_SSL)
+    public static final ConfigOption<String> SSL_REST_CLIENT_TRUSTSTORE =
+            key("security.ssl.rest.client.truststore")
+                    .noDefaultValue()
+                    .withDescription(
+                            "The client side truststore file containing the public CA certificates to verify the peer "
+                                    + "for Flink's external REST endpoints.");
+
 
     /** For external (REST) SSL, the secret to decrypt the truststore. */
     @Documentation.Section(Documentation.Sections.SECURITY_SSL)
